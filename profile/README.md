@@ -1,12 +1,11 @@
-## Hi there 👋
+<!-- Orbitron 打字機 header -->
+![](https://readme-typing-svg.demolab.com?font=Orbitron&size=20&duration=3000&color=00F5D4&background=060A0F&center=true&vCenter=true&lines=DEVOPS_OA;HARDWARE+%2F%2F+AUTOMATION;FULL-STACK+ENGINEER)
 
-<!--
+<!-- 暗色 stats card -->
+![](https://github-readme-stats.vercel.app/api?username=你的帳號&show_icons=true&theme=tokyonight&border_color=00f5d4&icon_color=00f5d4&title_color=00f5d4)
 
-**Here are some ideas to get you started:**
+<!-- 語言圓餅 -->
+![](https://github-readme-stats.vercel.app/api/top-langs/?username=你的帳號&layout=compact&theme=tokyonight&border_color=00f5d4&title_color=00f5d4)
 
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+<!-- snake 貢獻圖 -->
+![snake](./github-contribution-grid-snake-dark.svg)
