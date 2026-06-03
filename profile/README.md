@@ -13,7 +13,7 @@
 
 ---
 
-### `// M2STATION · MEMBER LEADERBOARD`
+### `M2STATION · MEMBER LEADERBOARD`
 
 > Auto-generated daily from private org repositories via GitHub Actions
 
@@ -32,7 +32,7 @@
 
 ---
 
-### `// M2STATION · DAILY COMMIT TREND`
+### `M2STATION · DAILY COMMIT TREND`
 
 > All-repo daily commit volume over the last 90 days
 
@@ -64,7 +64,7 @@
 ---
 
 <div align="center">
-<sub><code>// AUTO-SYNC DAILY 10:00 TWN</code></sub>
+<sub><code>AUTO-SYNC DAILY 10:00 TWN</code></sub>
 <br/>
 <img src="https://raw.githubusercontent.com/oahsiao/oahsiao/main/assets/org-updated.svg"/>
 </div>
