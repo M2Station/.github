@@ -1,0 +1,109 @@
+name: Sync Latest Changes
+
+on:
+  schedule:
+    - cron: '30 2 * * *'   # 每天 UTC 02:30（台灣 10:30），在 oahsiao 02:00 更新之後
+  workflow_dispatch:        # 手動觸發
+
+concurrency:
+  group: sync-latest-changes
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Fetch latest-changes feed from oahsiao/oahsiao
+        run: |
+          curl -fsSL \
+            "https://raw.githubusercontent.com/oahsiao/oahsiao/main/assets/latest-changes.json" \
+            -o latest-changes.json
+          echo "Fetched feed:"
+          head -c 400 latest-changes.json || true
+
+      - name: Inject into profile/README.md
+        run: |
+          python3 - <<'PY'
+          import json, re, sys
+
+          README = "profile/README.md"
+          START  = "<!-- LATEST-CHANGES:START -->"
+          END    = "<!-- LATEST-CHANGES:END -->"
+
+          with open("latest-changes.json", encoding="utf-8") as f:
+              feed = json.load(f)
+
+          items = feed.get("latestChanges", []) or []
+
+          def esc(s):
+              return str(s).replace("|", "\\|").replace("\r", " ").replace("\n", " ").strip()
+
+          rows = []
+          for i, c in enumerate(items, 1):
+              repo  = c.get("repo", "")
+              sha   = c.get("sha", "")
+              url   = c.get("url", "")
+              login = c.get("login", "")
+              dt    = (c.get("committedDate") or "")[:10]
+              header = esc(c.get("header", ""))
+              if len(header) > 60:
+                  header = header[:57] + "..."
+              rows.append(f"{i:02d}. [`{repo}@{sha}`]({url}) — {header} · `{dt}` · {login}")
+
+          block = "\n".join(rows) if rows else "_No recent commits._"
+
+          with open(README, encoding="utf-8") as f:
+              md = f.read()
+
+          if START not in md or END not in md:
+              print("LATEST-CHANGES markers not found, skipping.")
+              sys.exit(0)
+
+          new_md = re.sub(
+              re.escape(START) + r"[\s\S]*?" + re.escape(END),
+              f"{START}\n{block}\n{END}",
+              md,
+          )
+
+          if new_md != md:
+              with open(README, "w", encoding="utf-8") as f:
+                  f.write(new_md)
+              print(f"Injected {len(rows)} latest changes.")
+          else:
+              print("No change.")
+          PY
+
+      - name: Commit and push (with retry)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          rm -f latest-changes.json
+
+          if git diff --quiet -- profile/README.md; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git add profile/README.md
+          git commit -m "chore: sync latest changes [skip ci]"
+
+          for i in 1 2 3 4 5; do
+            echo "Push attempt $i..."
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}" || git rebase --abort
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "Push succeeded."
+              exit 0
+            fi
+            echo "Push failed, retrying in 5s..."
+            sleep 5
+          done
+
+          echo "All push attempts failed."
+          exit 1

@@ -44,6 +44,16 @@
 
 ---
 
+### `M2STATION · LATEST 10 CHANGES`
+
+> Newest commits across all org repos · click a commit to open the change
+
+<!-- LATEST-CHANGES:START -->
+_No recent commits._
+<!-- LATEST-CHANGES:END -->
+
+---
+
 <div align="center">
 <sub><code>// AUTO-SYNC DAILY 10:00 TWN</code></sub>
 <br/>
